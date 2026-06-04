@@ -22,14 +22,14 @@ if ./tapeChecksRight.sh ; then
           echo "all checksums match"
           echo "delete File"
           rm "$1"
-          apprise -b "All tapes written & checksums match" -t tapeFinsih --config ./apprise.env
+          apprise -b "All tapes written & checksums match" -t tapeFinsih --config ./apprise.conf
          else
           echo "checksum check FAILED! Right Tape Checksum dont match remote"
-          apprise -b "checksum check FAILED! Right Tape Checksum dont match remote" -t tapeRightFail --config ./apprise.env
+          apprise -b "checksum check FAILED! Right Tape Checksum dont match remote" -t tapeRightFail --config ./apprise.conf
          fi
         else
          echo "checksum check FAILED! Right Tape Checksum dont match File"
-         apprise -b "checksum check FAILED! Right Tape Checksum dont match File" -t tapeRightFail --config ./apprise.env
+         apprise -b "checksum check FAILED! Right Tape Checksum dont match File" -t tapeRightFail --config ./apprise.conf
         fi
     else
         echo "Checksum check FAILED!"
@@ -37,12 +37,12 @@ if ./tapeChecksRight.sh ; then
         echo "$shaFromTape"
         echo "sha from File:"
         echo "$shaFromFile"
-        apprise -b "tape right checksum missmatch" -t tapeRightFail --config ./apprise.env
+        apprise -b "tape right checksum missmatch" -t tapeRightFail --config ./apprise.conf
     fi
   else
     echo "FAIL!! Remote and local file Checksums do not match!"
-    apprise -b "local and remote checksums dont match" -t tapeFail --config ./apprise.env
+    apprise -b "local and remote checksums dont match" -t tapeFail --config ./apprise.conf
   fi
 else
- apprise -b "tape check right failed" -t tapeRightFail --config ./apprise.env
+ apprise -b "tape check right failed" -t tapeRightFail --config ./apprise.conf
 fi
