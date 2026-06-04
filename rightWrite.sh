@@ -1,6 +1,6 @@
 #!/bin/bash
 echo $1
-
+set -a && source .env && set +a
 shaRemote=$(cat $1.sha1.remote | cut -d " " -f 1)
 shaFromFile=$(cat $1.sha1 | cut -d " " -f 1)
 if ./tapeChecksRight.sh ; then
@@ -23,11 +23,14 @@ if ./tapeChecksRight.sh ; then
           echo "all checksums match"
           echo "delete File"
           rm $1
+          apprise -b "All tapes written & checksums match" -t tapeFinsih $notify
          else
           echo "checksum check FAILED! Right Tape Checksum dont match remote"
+          apprise -b "checksum check FAILED! Right Tape Checksum dont match remote" -t tapeRightFail $notify
          fi
         else
          echo "checksum check FAILED! Right Tape Checksum dont match File"
+         apprise -b "checksum check FAILED! Right Tape Checksum dont match File" -t tapeRightFail $notify
         fi
     else
         echo "Checksum check FAILED!"
@@ -35,8 +38,12 @@ if ./tapeChecksRight.sh ; then
         echo $shaFromTape
         echo "sha from File:"
         echo $shaFromFile
+        apprise -b "tape right checksum missmatch" -t tapeRightFail $notify
     fi
   else
     echo "FAIL!! Remote and local file Checksums do not match!"
+    apprise -b "local and remote checksums dont match" -t tapeFail $notify
   fi
+else
+ apprise -b "tape check right failed" -t tapeRightFail $notify
 fi

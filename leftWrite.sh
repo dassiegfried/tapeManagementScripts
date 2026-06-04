@@ -1,5 +1,6 @@
 #!/bin/bash
 echo $1
+set -a && source .env && set +a
 shaRemote=$(cat $1.sha1.remote | cut -d " " -f 1)
 shaFromFile=$(cat $1.sha1 | cut -d " " -f 1)
 if ./tapeChecks.sh ; then
@@ -20,8 +21,11 @@ if ./tapeChecks.sh ; then
         echo $shaFromTape
         echo "sha from File:"
         echo $shaFromFile
+        apprise -b "tape left checksum missmatch" -t tapeLeftFail $notify
     fi
   else
     echo "FAIL!!! Local File and Remote Checksums do not match!"
   fi
+else
+ apprise -b "tape check left failed" -t tapeLeftFail $notify
 fi
