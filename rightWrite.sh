@@ -7,7 +7,8 @@ if ./tapeChecksRight.sh ; then
     echo "local and remote check success"
     echo "sleeping 200sek to ensure other tape write finishes before this one because we delete after and they dont"
     sleep 400
-    mbuffer -P 86 -m 7G -o /dev/nst1 -s 524288 -i "$1" &&  mt -f /dev/nst1 weof 1 && sudo mt -f /dev/nst1 asf 0 && echo "tape Right spooled to pos 0" && mbuffer -P 86 -m 7G -i /dev/nst1 -s 524288 | sha1sum > "$1".sha1.R && mt -f /dev/nst1 eject
+    apprise -b "writing started. If you do not recive another notification after ~2h check back for errors" -t tapeRight --config ./apprise.conf
+    mbuffer -P 86 -m 7G -o /dev/nst1 -s 524288 -i "$1" &&  mt -f /dev/nst1 weof 1 && sudo mt -f /dev/nst1 asf 0 && echo "tape Right spooled to pos 0" && apprise -b "wirte finished starting read" -t tapeRight --config ./apprise.conf && mbuffer -P 86 -m 7G -i /dev/nst1 -s 524288 | sha1sum > "$1".sha1.R && mt -f /dev/nst1 eject
     # && rm $1
     shaFromTape=$(cat "$1".sha1.L | cut -d " " -f 1)
     shaFromTapeRight=$(cat "$1".sha1.R | cut -d " " -f 1)
@@ -44,5 +45,5 @@ if ./tapeChecksRight.sh ; then
     apprise -b "local and remote checksums dont match" -t tapeFail --config ./apprise.conf
   fi
 else
- apprise -b "tape check right failed" -t tapeRightFail --config ./apprise.conf
+ apprise -b "tape check failed" -t tapeRightFail --config ./apprise.conf
 fi
