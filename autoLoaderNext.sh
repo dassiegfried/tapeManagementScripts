@@ -3,11 +3,12 @@
 
 # 1. Attempt your standard tape change command (e.g., using mtx)
 # Replace this with your actual tape loading logic
+cd /mnt/app2/home/tapeManagementScripts/
 mtx -f /dev/sg36 next 0
 # 2. Check if the tape load succeeded 
 if [ $? -ne 0 ]; then
     # If it failed (meaning the autoloader is empty or has a mechanical issue)
-    apprise -b "autoloader tape failed check manually " -t autoloader --config ../apprise.conf
+    apprise -b "autoloader tape failed check manually " -t autoloader --config ./apprise.conf
     echo "=== AUTOLOADER EMPTY OR ERROR ===" > /dev/tty
     echo "Please reload the tape magazine, then press [ENTER] to continue..." > /dev/tty
     echo "after resume we load the next tape from slot 0 make sure you have inserted new tapes!"
@@ -24,6 +25,6 @@ if [ $? -ne 0 ]; then
     fi
 fi
 echo "starting tape checks" > /dev/tty
-/bin/bash ../tapeChecks.sh
+/bin/bash ./tapeChecks.sh
 # Exit with 0 so mbuffer resumes writing to the next tape
 exit 0
