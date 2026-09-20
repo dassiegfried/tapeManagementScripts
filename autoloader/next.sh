@@ -24,6 +24,6 @@ if [ $? -ne 0 ]; then
     fi
 fi
 echo "starting tape checks" > /dev/tty
-../tapeChecks.sh
+/bin/bash ../tapeChecks.sh
 # Exit with 0 so mbuffer resumes writing to the next tape
 exit 0
