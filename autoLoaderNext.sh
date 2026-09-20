@@ -8,7 +8,7 @@ sudo mtx -f /dev/sg36 next 0
 # 2. Check if the tape load succeeded 
 if [ $? -ne 0 ]; then
     # If it failed (meaning the autoloader is empty or has a mechanical issue)
-    apprise -b "autoloader tape failed check manually " -t autoloader --config ./apprise.conf
+    apprise -b "autoloader ran out of slots RESTOCK / check manually " -t RESTOCKautoloader --config ./apprise.conf
     echo "=== AUTOLOADER EMPTY OR ERROR ===" > /dev/tty
     echo "Please reload the tape magazine, then press [ENTER] to continue..." > /dev/tty
     echo "after resume we load the next tape from slot 0 make sure you have inserted new tapes!"
