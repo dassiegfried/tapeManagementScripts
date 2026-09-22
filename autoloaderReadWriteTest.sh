@@ -9,6 +9,6 @@ if [ "$md5Source" = "$md5FromTape" ]; then
     exit 0
 else
     echo "FAILED! md5 sums MISSMATCH! please insert usable tape"
-    apprise -b "tape check failed" -t tapeChecks --config ./apprise.conf
+    apprise --tag crit -b "tape check failed" -t tapeChecks --config ./apprise.conf
     exit 1
 fi
