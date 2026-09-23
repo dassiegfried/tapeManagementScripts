@@ -4,7 +4,7 @@
 # 1. Attempt your standard tape change command (e.g., using mtx)
 # Replace this with your actual tape loading logic
 cd /mnt/app2/home/tapeManagementScripts/
-sudo mtx -f /dev/sg36 next 0 | apprise -t autoloaderNextTape --config ./apprise.conf
+sudo mtx -f /dev/sg36 next 0 
 # 2. Check if the tape load succeeded 
 if [ $? -ne 0 ]; then
     # If it failed (meaning the autoloader is empty or has a mechanical issue)
@@ -24,6 +24,7 @@ if [ $? -ne 0 ]; then
         exit 1 # Hard fail if it still fails
     fi
 fi
+sudo mtx -f /dev/sg36 status | grep Empty | apprise -t autoloaderNextTape --config ./apprise.conf
 echo "starting tape checks" > /dev/tty
 /bin/bash ./tapeChecks.sh
 echo "tape checks finished at:"
