@@ -8,7 +8,7 @@ do
     else
         #no proccess is currently hashing this file so we are the one to start calculation on the hash
         fileSizeInBytes=$(stat --printf="%s" $var)
-
+        #do not start md5 hashing if the final filesize isnt reached
         if [ $fileSizeInBytes -lt 760000000000 ]; then
             continue
         fi
