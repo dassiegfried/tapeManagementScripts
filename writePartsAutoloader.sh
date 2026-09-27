@@ -20,7 +20,7 @@ else
 fi
 
 
-partName=$(ls | grep HDD | grep -v .md5 | head -n 1)
+partName=$(ls | grep tar.zstd.age. | grep -v .md5 | head -n 1)
 if [ -f $partName ]; then
     echo "file exists can continue"
 else
