@@ -41,18 +41,35 @@ if [ "$md5FromFile" = "$shaFromTape" ]; then
     cat $partName.md5
     echo "from tape: "
     cat $partName.md5.R 
-    echo "deleting files"
-    rm $partName $partName.md5 $partName.md5.R && echo "files deleted"
-    apprise -b "wrote $partName" -t tapeStatus --config ./apprise.conf
-    echo "----------------------------------"
-    echo "----------------------------------"
-    echo "----------------------------------"
+    echo "loading second copy tape"
     /bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
-    echo "----------------------------------"
-    echo "----------------------------------"
-    echo "----------------------------------"
-    /bin/bash /mnt/app2/home/tapeManagementScripts/writePartsAutoloader.sh
-
+    mbuffer -i $partName -H -P 95 -m 7G -s 524288 -o /dev/nst0 &&  mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" && mbuffer -P 86 -m 7G -i /dev/nst0 -s 524288 | md5sum > "$partName".md5.L
+    shaFromTapeTwo=$(cat "$partName".md5.L | cut -d " " -f 1)
+    if [ "$md5FromFile" = "$shaFromTapeTwo" ]; then
+        echo "Checksums Match to File"
+        echo "from file:"
+        cat $partName.md5
+        echo "from tape: "
+        cat $partName.md5.L 
+        echo "deleting files"
+        rm $partName $partName.md5 $partName.md5.R $partName.md5.L && echo "files deleted"
+        apprise -b "wrote $partName" -t tapeStatus --config ./apprise.conf
+        echo "----------------------------------"
+        echo "----------------------------------"
+        echo "----------------------------------"
+        /bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
+        echo "----------------------------------"
+        echo "----------------------------------"
+        echo "----------------------------------"
+        /bin/bash /mnt/app2/home/tapeManagementScripts/writePartsAutoloader.sh
+    else
+        apprise --tag crit -b "md5 missmatch" -t tapeChecks --config ./apprise.conf
+        echo "hashes dont match"
+        echo "from file:"
+        cat $partName.md5
+        echo "from tape: "
+        cat $partName.md5.L 
+    fi
 else
     apprise --tag crit -b "md5 missmatch" -t tapeChecks --config ./apprise.conf
     echo "hashes dont match"
