@@ -33,7 +33,7 @@ do
     sleep 5
 done
 echo "hash file exists we can start the write"
-mbuffer --tapeaware -i $partName -H -P 95 -m 7G -s 524288 -o /dev/nst0 -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" && mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" && mbuffer -P 86 -m 7G -i /dev/nst0 -s 524288 | md5sum > "$partName".md5.R
+mbuffer --tapeaware -i $partName -H -P 95 -m 2G -s 524288 -o /dev/nst0 -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" && mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" && mbuffer -P 86 -m 2G -i /dev/nst0 -s 524288 | md5sum > "$partName".md5.R
 md5FromFile=$(cat "$partName".md5 | cut -d " " -f 1)
 shaFromTape=$(cat "$partName".md5.R | cut -d " " -f 1)
 if [ "$md5FromFile" = "$shaFromTape" ]; then
@@ -44,7 +44,7 @@ if [ "$md5FromFile" = "$shaFromTape" ]; then
     cat $partName.md5.R 
     echo "loading second copy tape"
     /bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
-    mbuffer --tapeaware -i $partName -H -P 95 -m 7G -s 524288 -o /dev/nst0 -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" &&  mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" && mbuffer -P 86 -m 7G -i /dev/nst0 -s 524288 | md5sum > "$partName".md5.L
+    mbuffer --tapeaware -i $partName -H -P 95 -m 2G -s 524288 -o /dev/nst0 -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" &&  mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" && mbuffer -P 86 -m 2G -i /dev/nst0 -s 524288 | md5sum > "$partName".md5.L
     shaFromTapeTwo=$(cat "$partName".md5.L | cut -d " " -f 1)
     if [ "$md5FromFile" = "$shaFromTapeTwo" ]; then
         echo "Checksums Match to File"
