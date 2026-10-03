@@ -10,7 +10,7 @@ if [ -f firstStart ]; then
     sleep 1
 else
     echo "this is the first time the script is called testing tape"
-    /bin/bash /mnt/app2/home/tapeManagementScripts/autoloaderReadWriteTest.sh 
+    /bin/bash /mnt/app2/home/tapeManagementScripts/tapeChecks.sh
     if [ $? -ne 0 ]; then
         echo "check failed load undamaged tape to start write"
         exit 1
@@ -21,6 +21,7 @@ fi
 
 
 partName=$(ls | grep tar.zstd.age. | grep -v .md5 | head -n 1)
+echo "file named $partName selected"
 if [ -f $partName ]; then
     echo "file exists can continue"
 else
