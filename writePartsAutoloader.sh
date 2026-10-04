@@ -26,7 +26,7 @@ if [ -f $partName ]; then
     echo "file exists can continue"
 else
     echo "tartgeted file $partName dosnt exists!"
-    apprise --tag crit -b "tartgeted file $partName dosnt exists!" -t missingFile --config ./apprise.conf
+    apprise --tag crit -b "tartgeted file $partName dosnt exists!" -t missingFile --config /mnt/app2/home/tapeManagementScripts/apprise.conf
 fi
 until [ -f $partName.md5 ]
 do
@@ -54,7 +54,7 @@ if [ "$md5FromFile" = "$shaFromTape" ]; then
         cat $partName.md5.L 
         echo "deleting files"
         rm $partName $partName.md5 $partName.md5.R $partName.md5.L && echo "files deleted"
-        apprise -b "wrote $partName" -t tapeStatus --config ./apprise.conf
+        apprise -b "wrote $partName" -t tapeStatus --config /mnt/app2/home/tapeManagementScripts/apprise.conf
         echo "----------------------------------"
         echo "----------------------------------"
         echo "----------------------------------"
@@ -64,7 +64,7 @@ if [ "$md5FromFile" = "$shaFromTape" ]; then
         echo "----------------------------------"
         /bin/bash /mnt/app2/home/tapeManagementScripts/writePartsAutoloader.sh
     else
-        apprise --tag crit -b "md5 missmatch" -t tapeChecks --config ./apprise.conf
+        apprise --tag crit -b "md5 missmatch" -t tapeChecks --config /mnt/app2/home/tapeManagementScripts/apprise.conf
         echo "hashes dont match"
         echo "from file:"
         cat $partName.md5
@@ -72,7 +72,7 @@ if [ "$md5FromFile" = "$shaFromTape" ]; then
         cat $partName.md5.L 
     fi
 else
-    apprise --tag crit -b "md5 missmatch" -t tapeChecks --config ./apprise.conf
+    apprise --tag crit -b "md5 missmatch" -t tapeChecks --config /mnt/app2/home/tapeManagementScripts/apprise.conf
     echo "hashes dont match"
     echo "from file:"
     cat $partName.md5

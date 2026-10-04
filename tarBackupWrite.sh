@@ -9,7 +9,7 @@ echo "check loaded tape"
 if [ $? -ne 0 ]; then
     echo "check failed load undamaged tape to start write"
 else 
-    apprise -b "tape checks successfull enter password to start backup" -t tapeEnterPassword --config ./apprise.conf
+    apprise -b "tape checks successfull enter password to start backup" -t tapeEnterPassword --config /mnt/app2/home/tapeManagementScripts/apprise.conf
     #TODO: rewrite to use zfs send instead of tar as tar archive is 10TB bigger then source because of symlinks
  #   tar -h --hard-dereference -c -C new . | age -p | mbuffer --tapeaware -P 95 -m 800G -T /mnt/app2/home/autoloader -s 524288 -o /dev/nst0 -A "/mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh"
 fi
