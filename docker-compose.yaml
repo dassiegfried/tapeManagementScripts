@@ -10,6 +10,5 @@ services:
         devices:
           - "/dev/sg34:/dev/sg34"
           - "/dev/sg35:/dev/sg35"
-          - "/dev/tape:/dev/tape"
           - "/dev/st0:/dev/st0"
           - "/dev/nst0:/dev/nst0"
