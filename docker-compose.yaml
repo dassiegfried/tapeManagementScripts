@@ -5,6 +5,8 @@ services:
             - 5901:5901
             - 6901:6901
         image: consol/centos-xfce-vnc
+        privileged: true
+        user: "0"
         volumes: 
           - /mnt/app2/home/docker:/mnt/app/home
         devices:
