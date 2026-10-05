@@ -1,0 +1,15 @@
+name: vnc
+services:
+    centos-xfce-vnc:
+        ports:
+            - 5901:5901
+            - 6901:6901
+        image: consol/centos-xfce-vnc
+        volumes: 
+          - /mnt/app2/home/docker:/mnt/app/home
+        devices:
+          - "/dev/sg34:/dev/sg34"
+          - "/dev/sg35:/dev/sg35"
+          - "/dev/tape:/dev/tape"
+          - "/dev/st0:/dev/st0"
+          - "/dev/nst0:/dev/nst0"
