@@ -28,11 +28,7 @@ else
     echo "tartgeted file $partName dosnt exists!"
     apprise --tag crit -b "tartgeted file $partName dosnt exists!" -t missingFile --config /mnt/app2/home/tapeManagementScripts/apprise.conf
 fi
-until [ -f $partName.md5 ]
-do
-    sleep 5
-done
-echo "hash file exists we can start the write"
+echo "starting write to tape"
 cat $partName | mbuffer -H -P 95 -m 2G -s 524288 -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" && mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
 md5FromFile=$(cat "$partName".md5 | cut -d " " -f 1)
 shaFromTape=$(cat "$partName".md5.R | cut -d " " -f 1)
