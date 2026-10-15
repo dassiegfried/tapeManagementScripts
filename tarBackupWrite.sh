@@ -11,5 +11,5 @@ if [ $? -ne 0 ]; then
 else 
     apprise -b "tape checks successfull enter password to start backup" -t tapeEnterPassword --config /mnt/app2/home/tapeManagementScripts/apprise.conf
     #TODO: rewrite to use zfs send instead of tar as tar archive is 10TB bigger then source because of symlinks
-    tar -h --hard-dereference -c -C B2Backup . | zstd -6 -T12 | age -p | mbuffer --tapeaware -P 95 -m 1600G -T /mnt/app2/home/autoloader -s 64k -o /dev/nst0 -A "/mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh"
+    tar -h --hard-dereference -c -C B2Backup . | zstd -6 -T0 | age -p | mbuffer --tapeaware -P 95 -m 1600G -T /mnt/app2/home/autoloader -s 64k -o /dev/nst0 -A "/mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh"
 fi
