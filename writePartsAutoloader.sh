@@ -29,35 +29,32 @@ else
     apprise --tag crit -b "tartgeted file $partName dosnt exists!" -t missingFile --config /mnt/app2/home/tapeManagementScripts/apprise.conf
 fi
 echo "starting write to tape"
-cat $partName | mbuffer -H -P 95 -m 2G -s 524288 -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" && mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
-md5FromFile=$(cat "$partName".md5 | cut -d " " -f 1)
-shaFromTape=$(cat "$partName".md5.R | cut -d " " -f 1)
-if [ $? -e 0 ]; then
-    echo "first write successfull"
-    echo "loading second copy tape"
-    /bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
-    cat $partName | mbuffer -H -P 95 -m 2G -s 524288 -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" &&  mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
-    shaFromTapeTwo=$(cat "$partName".md5.L | cut -d " " -f 1)
-    if [ $? -e 0  ]; then
-        echo "second write successfull"
-        echo "deleting files"
-        rm firstStart $partName && echo "files deleted"
-        apprise -b "wrote $partName" -t tapeStatus --config /mnt/app2/home/tapeManagementScripts/apprise.conf
-        echo "----------------------------------"
-        echo "----------------------------------"
-        echo "----------------------------------"
-        /bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
-        echo "----------------------------------"
-        echo "----------------------------------"
-        echo "----------------------------------"
-        /bin/bash /mnt/app2/home/tapeManagementScripts/writePartsAutoloader.sh
-    else
-        apprise --tag crit -b "second write failed" -t tapeChecks --config /mnt/app2/home/tapeManagementScripts/apprise.conf
-        echo "second write failed"
-    fi
-else
+cat $partName | mbuffer -H -P 95 -s 64k -r 120M -m 2G -s 524288 -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" && mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
+if [ $? -ne 0 ]; then
     apprise --tag crit -b "first write failed" -t tapeChecks --config /mnt/app2/home/tapeManagementScripts/apprise.conf
-    echo "first write failed"
+    echo "first write failed"   
+    exit 1
 fi
+echo "first write successfull"
+echo "loading second copy tape"
+/bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
+cat $partName | mbuffer -H -P 95 -s 64k -r 120M -m 2G -s 524288 -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" &&  mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
+if [ $? -ne 0  ]; then
+    apprise --tag crit -b "second write failed" -t tapeChecks --config /mnt/app2/home/tapeManagementScripts/apprise.conf
+    echo "second write failed"
+    exit 1
+fi
+echo "second write successfull"
+echo "deleting files"
+rm firstStart $partName && echo "files deleted"
+apprise -b "wrote $partName" -t tapeStatus --config /mnt/app2/home/tapeManagementScripts/apprise.conf
+echo "----------------------------------"
+echo "----------------------------------"
+echo "----------------------------------"
+/bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
+echo "----------------------------------"
+echo "----------------------------------"
+echo "----------------------------------"
+/bin/bash /mnt/app2/home/tapeManagementScripts/writePartsAutoloader.sh
 
     
