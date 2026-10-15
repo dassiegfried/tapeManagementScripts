@@ -4,7 +4,7 @@ if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
 fi
-cd /mnt/app2/home
+cd /mnt/replica/new/tapeB2BackupLocal
 echo "check loaded tape"
 if [ -f firstStart ]; then
     sleep 1
