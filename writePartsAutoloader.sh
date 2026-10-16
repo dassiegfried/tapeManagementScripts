@@ -29,7 +29,7 @@ else
     apprise --tag crit -b "tartgeted file $partName dosnt exists!" -t missingFile --config /mnt/app2/home/tapeManagementScripts/apprise.conf
 fi
 echo "starting write to tape"
-nice -n -10 ionice -c 2 cat $partName | mbuffer -H -P 95 -s 64k -m 2G -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" && mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
+nice -n -10 ionice -c 1 cat $partName | mbuffer -H -P 95 -s 64k -m 100G -T /mnt/app2/home/mbufferCache.bin -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" && mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
 if [ $? -ne 0 ]; then
     apprise --tag crit -b "first write failed" -t tapeChecks --config /mnt/app2/home/tapeManagementScripts/apprise.conf
     echo "first write failed"   
@@ -38,7 +38,7 @@ fi
 echo "first write successfull"
 echo "loading second copy tape"
 /bin/bash /mnt/app2/home/tapeManagementScripts/autoLoaderNext.sh
-nice -n -10 ionice -c 2 cat $partName | mbuffer -H -P 95 -s 64k -m 2G -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" &&  mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
+nice -n -10 ionice -c 2 cat $partName | mbuffer -H -P 95 -s 64k -m 100G -T /mnt/app2/home/mbufferCache.bin -o /dev/nst0 --tapeaware -A "/mnt/app2/home/tapeManagementScripts/noNextTape.sh" &&  mt -f /dev/nst0 weof 1 && sudo mt -f /dev/nst0 asf 0 && echo "tape Right spooled to pos 0" 
 if [ $? -ne 0  ]; then
     apprise --tag crit -b "second write failed" -t tapeChecks --config /mnt/app2/home/tapeManagementScripts/apprise.conf
     echo "second write failed"
