@@ -22,6 +22,11 @@ fi
 
 partName=$(ls | grep tar.zstd.age. | grep -v .md5 | head -n 1)
 echo "file named $partName selected"
+if [ "$partName" = "" ];then
+   echo "part is empty"
+   apprise --tag crit -b "tartgeted file $partName dosnt exists!" -t missingFile --config /mnt/app2/home/tapeManagementScripts/apprise.conf
+   exit 0
+fi
 if [ -f $partName ]; then
     echo "file exists can continue"
 else
