@@ -1,0 +1,1 @@
+zfs send -c replica/new@auto-2026-10-13_18-09 | zstd -4 -T8 | /mnt/app2/home/tapeManagementScripts/ensuredf.sh /mnt/app2/home 200G | age -p | split --bytes=740G --suffix-length=2 --numeric-suffix - /mnt/app2/home/HDDs.zfs.zstd.age.  && apprise --tag crit -b "split finished" -t split --config /mnt/app2/home/tapeManagementScripts/apprise.conf
