@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /mnt/replica
+tar -c -C new . | zstd -4 -T8 | /mnt/app2/home/tapeManagementScripts/ensuredf.sh /mnt/app2/home 200G | age -p | split --bytes=740G --suffix-length=2 --numeric-suffix - /mnt/app2/home/HDDs.zfs.zstd.age.  && apprise --tag crit -b "split finished" -t split --config /mnt/app2/home/tapeManagementScripts/apprise.conf
